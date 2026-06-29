@@ -920,7 +920,7 @@ function SimpleGoalInputScreen({
         <div className="relative z-10 mx-auto w-full max-w-5xl">
           <div className="mb-10 text-center">
             <h1 className="break-keep text-4xl font-black leading-tight text-black sm:text-5xl lg:text-6xl">
-              목표는 있는데, 실행이 어려운 당신에게
+              목표는 있는데, 시작이 막막한가요?
             </h1>
             <p className="mx-auto mt-5 max-w-2xl break-keep text-lg font-bold leading-8 text-zinc-500">
               막막한 목표를 지금 당장 실행할 수 있는 가장 작은 행동으로 바꿔드립니다.
