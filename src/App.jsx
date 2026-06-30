@@ -1329,7 +1329,7 @@ function MapScreen({ tree, activeTaskId, mapPhase, progress, onMapPhaseChange, o
 
 function TaskListNav({ taskEntries, activeTaskId, onSelectTask }) {
   return (
-    <aside className="order-2 max-h-[280px] min-h-0 overflow-y-auto rounded-[26px] bg-white p-4 shadow-[0_1px_0_rgba(0,0,0,0.04)] lg:order-none lg:h-full lg:max-h-none lg:overflow-y-auto">
+    <aside className="order-2 max-h-[280px] min-h-0 overflow-y-auto rounded-[26px] bg-white p-4 shadow-[0_1px_0_rgba(0,0,0,0.04)] xl:order-none xl:h-full xl:max-h-none xl:overflow-y-auto">
       <div className="mb-4 flex items-center gap-2">
         <span className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-[#FFF1F2] text-[#EA002C]">
           <ListTodo aria-hidden="true" className="h-5 w-5" />
@@ -1396,7 +1396,7 @@ function AssistPanel({
   onSubmit,
 }) {
   return (
-    <section id="ai-assist" className="flex min-h-[260px] flex-1 flex-col rounded-[22px] bg-[#f7f7f7] p-3 lg:min-h-0">
+    <section id="ai-assist" className="flex min-h-[260px] flex-1 flex-col rounded-[22px] bg-[#f7f7f7] p-3 xl:min-h-0">
       <div className="mb-2 flex items-center gap-2">
         <Sparkles aria-hidden="true" className="h-4 w-4 text-sk-orange" />
         <h2 className="text-sm font-black text-black">Achiever AI 채팅</h2>
@@ -1489,7 +1489,7 @@ function TaskScreen({
   const parentGoal = path[path.length - 1] || tree.title;
   const achieveTips = normalizeAchieveTips(task?.achieveTips, task?.title, parentGoal);
   const [isDesktopTaskLayout, setIsDesktopTaskLayout] = useState(() =>
-    typeof window === "undefined" ? true : window.innerWidth >= 1024,
+    typeof window === "undefined" ? true : window.innerWidth >= 1280,
   );
   const [taskBoardHeight, setTaskBoardHeight] = useState(() =>
     typeof window === "undefined" ? 560 : Math.max(420, window.innerHeight - 224),
@@ -1499,7 +1499,7 @@ function TaskScreen({
     window.scrollTo({ top: 0, left: 0, behavior: "auto" });
     const previousOverflow = document.body.style.overflow;
     const updateTaskBoardLayout = () => {
-      const isDesktop = window.innerWidth >= 1024;
+      const isDesktop = window.innerWidth >= 1280;
       setIsDesktopTaskLayout(isDesktop);
       setTaskBoardHeight(Math.max(420, window.innerHeight - 224));
       document.body.style.overflow = isDesktop ? "hidden" : previousOverflow;
@@ -1539,7 +1539,7 @@ function TaskScreen({
 
         <section
           id="task-board"
-          className="grid gap-4 rounded-[28px] bg-[#f3f3f3] p-3 sm:p-5 lg:min-h-0 lg:grid-cols-[260px_minmax(0,1fr)_340px] lg:overflow-hidden lg:rounded-[32px] lg:p-5"
+          className="grid gap-4 rounded-[28px] bg-[#f3f3f3] p-3 sm:p-5 xl:min-h-0 xl:grid-cols-[260px_minmax(0,1fr)_340px] xl:overflow-hidden xl:rounded-[32px] xl:p-5"
           style={isDesktopTaskLayout ? { height: taskBoardHeight } : undefined}
         >
           <TaskListNav
@@ -1548,7 +1548,7 @@ function TaskScreen({
             taskEntries={taskEntries}
           />
 
-          <div className="order-1 flex min-h-[420px] flex-col justify-center rounded-[26px] bg-white p-4 shadow-[0_1px_0_rgba(0,0,0,0.04)] sm:min-h-[460px] sm:p-6 lg:order-none lg:min-h-0 lg:overflow-hidden">
+          <div className="order-1 flex min-h-[420px] flex-col justify-center rounded-[26px] bg-white p-4 shadow-[0_1px_0_rgba(0,0,0,0.04)] sm:min-h-[460px] sm:p-6 xl:order-none xl:min-h-0 xl:overflow-hidden">
             <div className="mx-auto w-full max-w-3xl space-y-4">
               <div className="rounded-[32px] border border-zinc-100 bg-white p-4 shadow-[0_18px_55px_rgba(0,0,0,0.07)] sm:p-6">
                 <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
@@ -1617,7 +1617,7 @@ function TaskScreen({
             </div>
           </div>
 
-          <aside className="order-3 flex min-h-0 flex-col gap-3 rounded-[26px] bg-white p-4 shadow-[0_1px_0_rgba(0,0,0,0.04)] lg:order-none lg:h-full lg:overflow-hidden">
+          <aside className="order-3 flex min-h-0 flex-col gap-3 rounded-[26px] bg-white p-4 shadow-[0_1px_0_rgba(0,0,0,0.04)] xl:order-none xl:h-full xl:overflow-hidden">
             <div className="grid grid-cols-2 gap-3">
               <InfoRow label="진행 상태" value={"전체 " + progress.total + "개 중 " + progress.done + "개 완료"} />
               <InfoRow label="진행률" value={progress.percent + "%"} />
