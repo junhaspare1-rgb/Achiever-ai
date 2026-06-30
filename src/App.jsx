@@ -715,7 +715,7 @@ function ProjectCard({ project, isActive, onSelect, onDelete }) {
           type="button"
         >
           <Trash2 aria-hidden="true" className="h-4 w-4" />
-          ??젣
+          삭제
         </button>
       </div>
     </article>
@@ -1673,8 +1673,8 @@ function CompletionScreen({ tree, progress, startTime, onReset, onLogoClick, onP
         ))}
 
         <div className="relative z-10 w-full max-w-3xl rounded-[32px] bg-white p-6 text-center shadow-[0_20px_60px_rgba(0,0,0,0.08)] ring-1 ring-zinc-100 sm:p-10">
-          <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-full bg-[#FFF1F2] text-4xl">
-            ?럦
+          <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-full bg-[#FFF1F2] text-[#EA002C]">
+            <Sparkles aria-hidden="true" className="h-8 w-8" />
           </div>
           <h1 className="text-4xl font-black text-black sm:text-5xl">해냈어요!</h1>
           <p className="mx-auto mt-4 max-w-xl break-keep text-lg font-semibold leading-8 text-zinc-500">
