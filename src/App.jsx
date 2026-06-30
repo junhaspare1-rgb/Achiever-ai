@@ -577,8 +577,8 @@ function AppHeader({ onLogoClick, onProjectsClick }) {
     <header className="border-b border-zinc-200/70 bg-white px-5 py-7 sm:px-8 lg:px-10">
       <div className="mx-auto flex w-full max-w-[1600px] items-center justify-between">
         <button className="inline-flex items-baseline gap-1 font-black" onClick={onLogoClick} type="button">
-          <span className="text-2xl text-sk-orange">Achiever</span>
-          <span className="text-2xl text-sk-red">AI</span>
+          <span className="text-xl text-sk-orange sm:text-2xl">Achiever</span>
+          <span className="text-xl text-sk-red sm:text-2xl">AI</span>
         </button>
 
         <div className="hidden items-center gap-12 text-base font-black text-black lg:flex">
@@ -591,13 +591,29 @@ function AppHeader({ onLogoClick, onProjectsClick }) {
         </div>
 
         <button
-          className="rounded-full bg-black px-5 py-2 text-sm font-black text-white transition hover:bg-zinc-800"
+          className="rounded-full bg-black px-4 py-2 text-sm font-black text-white transition hover:bg-zinc-800 sm:px-5"
           onClick={() => window.alert("현재 Achiever AI는 베타 버전이어서 로그인 기능을 지원하지 않습니다.")}
           type="button"
         >
           Log In
         </button>
       </div>
+      <nav className="mx-auto mt-5 grid w-full max-w-[1600px] grid-cols-2 gap-2 lg:hidden">
+        <button
+          className="h-11 rounded-full border border-zinc-200 bg-white text-sm font-black text-zinc-900 transition hover:border-[#EA002C] hover:text-[#EA002C]"
+          onClick={onLogoClick}
+          type="button"
+        >
+          프로젝트 생성
+        </button>
+        <button
+          className="h-11 rounded-full border border-zinc-200 bg-white text-sm font-black text-zinc-900 transition hover:border-[#EA002C] hover:text-[#EA002C]"
+          onClick={onProjectsClick}
+          type="button"
+        >
+          프로젝트 목록
+        </button>
+      </nav>
     </header>
   );
 }
@@ -607,7 +623,7 @@ function Shell({ children, onLogoClick, onProjectsClick }) {
     <main className="min-h-screen bg-[#F5F7FA] text-zinc-950">
       <AppHeader onLogoClick={onLogoClick} onProjectsClick={onProjectsClick} />
       <div className="bg-[#F5F7FA]">
-        <div className="mx-auto flex min-h-[calc(100vh-6rem)] w-full max-w-[1600px] flex-col px-5 pb-10 pt-7 sm:px-8 sm:pt-9 lg:px-10">
+        <div className="mx-auto flex min-h-[calc(100vh-6rem)] w-full max-w-[1600px] flex-col px-4 pb-24 pt-6 sm:px-8 sm:pb-10 sm:pt-9 lg:px-10">
           {children}
         </div>
       </div>
@@ -635,10 +651,10 @@ function ProjectListScreen({ projects, activeProjectId, onCreateProject, onSelec
               <FolderOpen aria-hidden="true" className="h-4 w-4" />
               프로젝트 보관함
             </div>
-            <h1 className="text-4xl font-black text-black sm:text-5xl">모든 프로젝트</h1>
+            <h1 className="text-3xl font-black text-black sm:text-5xl">모든 프로젝트</h1>
           </div>
 
-          <ActionButton className="bg-[#EA002C] text-white hover:bg-[#D90029]" icon={Plus} onClick={onCreateProject} type="button">
+          <ActionButton className="w-full bg-[#EA002C] text-white hover:bg-[#D90029] sm:w-auto" icon={Plus} onClick={onCreateProject} type="button">
             새 프로젝트
           </ActionButton>
         </div>
@@ -919,10 +935,10 @@ function SimpleGoalInputScreen({
         <div className="pointer-events-none absolute left-1/2 top-1/2 h-[560px] w-[860px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(circle,rgba(234,0,44,0.16)_0%,rgba(244,119,37,0.08)_34%,rgba(245,247,250,0)_70%)] blur-3xl" />
         <div className="relative z-10 mx-auto w-full max-w-5xl">
           <div className="mb-10 text-center">
-            <h1 className="break-keep text-4xl font-black leading-tight text-black sm:text-5xl lg:text-6xl">
+            <h1 className="break-keep text-3xl font-black leading-tight text-black sm:text-5xl lg:text-6xl">
               목표는 있는데, 시작이 막막한가요?
             </h1>
-            <p className="mx-auto mt-5 max-w-2xl break-keep text-lg font-bold leading-8 text-zinc-500">
+            <p className="mx-auto mt-5 max-w-2xl break-keep text-base font-bold leading-7 text-zinc-500 sm:text-lg sm:leading-8">
               막막한 목표를 지금 당장 실행할 수 있는 가장 작은 행동으로 바꿔드립니다.
             </p>
           </div>
@@ -956,14 +972,14 @@ function SimpleGoalInputScreen({
                 <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
                   <input
                     id="goal-input"
-                    className="h-20 min-w-0 flex-1 rounded-[22px] border-0 bg-[#fafafa] px-6 text-xl font-black text-zinc-950 outline-none placeholder:text-zinc-400 sm:px-8"
+                    className="h-16 min-w-0 flex-1 rounded-[22px] border-0 bg-[#fafafa] px-5 text-base font-black text-zinc-950 outline-none placeholder:text-zinc-400 sm:h-20 sm:px-8 sm:text-xl"
                     disabled={isLoading}
                     onChange={(event) => onChange(event.target.value)}
                     placeholder={copy.placeholder}
                     value={value}
                   />
                   <button
-                    className="inline-flex h-16 w-full items-center justify-center gap-2 rounded-[22px] bg-[#EA002C] px-7 text-base font-black text-white transition hover:bg-[#D90029] disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto"
+                    className="inline-flex h-14 w-full items-center justify-center gap-2 rounded-[22px] bg-[#EA002C] px-7 text-base font-black text-white transition hover:bg-[#D90029] disabled:cursor-not-allowed disabled:opacity-50 sm:h-16 sm:w-auto"
                     disabled={isLoading}
                     type="submit"
                   >
@@ -1007,7 +1023,12 @@ function SimpleGoalInputScreen({
 }
 
 function TreeMap({ tree, phase, activeTaskId }) {
-  const [zoom, setZoom] = useState(1);
+  const [zoom, setZoom] = useState(() => {
+    if (typeof window === "undefined") return 1;
+    if (window.innerWidth < 480) return 0.7;
+    if (window.innerWidth < 768) return 0.82;
+    return 1;
+  });
   const [selectedNodeId, setSelectedNodeId] = useState("");
   const layout = useMemo(() => {
     const visibleTree = visibleTreeByPhase(tree, phase);
@@ -1078,7 +1099,7 @@ function TreeMap({ tree, phase, activeTaskId }) {
   });
 
   return (
-    <div className="rounded-[30px] bg-white p-4 shadow-[0_1px_0_rgba(0,0,0,0.04)]">
+    <div className="rounded-[24px] bg-white p-3 shadow-[0_1px_0_rgba(0,0,0,0.04)] sm:rounded-[30px] sm:p-4">
       <div className="mb-4 flex justify-end">
         <div className="flex items-center gap-2">
           <button
@@ -1108,7 +1129,7 @@ function TreeMap({ tree, phase, activeTaskId }) {
         </div>
       </div>
 
-      <div className="tree-map-scroll overflow-auto rounded-[24px] bg-[#fafafa] p-4">
+      <div className="tree-map-scroll overflow-auto rounded-[20px] bg-[#fafafa] p-3 sm:rounded-[24px] sm:p-4">
         <svg
           aria-label="목표 트리 MAP"
           className="tree-map-canvas"
@@ -1250,15 +1271,15 @@ function MapScreen({ tree, activeTaskId, mapPhase, progress, onMapPhaseChange, o
       <ProgressBar done={progress.done} total={progress.total} />
       <Shell onLogoClick={onLogoClick} onProjectsClick={onProjectsClick}>
         <section className="space-y-6">
-          <header className="sticky top-5 z-20 rounded-[28px] bg-white/95 p-5 shadow-[0_10px_30px_rgba(0,0,0,0.06)] backdrop-blur">
+          <header className="sticky top-3 z-20 rounded-[24px] bg-white/95 p-4 shadow-[0_10px_30px_rgba(0,0,0,0.06)] backdrop-blur sm:top-5 sm:rounded-[28px] sm:p-5">
             <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
               <div>
                 <p className="text-sm font-black text-[#EA002C]">{phaseCopy}</p>
-                <h1 className="mt-1 break-keep text-3xl font-black text-black sm:text-4xl">
+                <h1 className="mt-1 break-keep text-2xl font-black text-black sm:text-4xl">
                   {tree.title}
                 </h1>
               </div>
-              <div className="min-w-[220px]">
+              <div className="min-w-0 sm:min-w-[220px]">
                 <p className="mb-2 text-sm font-black text-zinc-500">
                   전체 {progress.total}개 중 {progress.done}개 완료
                 </p>
@@ -1272,12 +1293,12 @@ function MapScreen({ tree, activeTaskId, mapPhase, progress, onMapPhaseChange, o
             </div>
           </header>
 
-          <div className="rounded-[34px] bg-[#f3f3f3] p-4 sm:p-6 lg:p-8">
+          <div className="rounded-[28px] bg-[#f3f3f3] p-3 sm:rounded-[34px] sm:p-6 lg:p-8">
             <TreeMap tree={tree} phase={mapPhase} activeTaskId={activeTaskId} />
 
-            <div className="mt-6 flex flex-wrap items-center justify-between gap-3">
+            <div className="mt-6 flex flex-col items-stretch justify-between gap-3 sm:flex-row sm:flex-wrap sm:items-center">
               <ActionButton
-                className="border border-zinc-200 bg-white text-zinc-700 hover:border-sk-orange hover:text-black"
+                className="w-full border border-zinc-200 bg-white text-zinc-700 hover:border-sk-orange hover:text-black sm:w-auto"
                 icon={RotateCcw}
                 onClick={onReset}
                 type="button"
@@ -1287,7 +1308,7 @@ function MapScreen({ tree, activeTaskId, mapPhase, progress, onMapPhaseChange, o
 
               {mapPhase >= 3 ? (
                 <ActionButton
-                  className="bg-sk-red text-white shadow-[0_16px_34px_rgba(234,0,44,0.25)] hover:bg-[#d90029]"
+                  className="w-full bg-sk-red text-white shadow-[0_16px_34px_rgba(234,0,44,0.25)] hover:bg-[#d90029] sm:w-auto"
                   onClick={onViewTask}
                   type="button"
                 >
@@ -1308,7 +1329,7 @@ function MapScreen({ tree, activeTaskId, mapPhase, progress, onMapPhaseChange, o
 
 function TaskListNav({ taskEntries, activeTaskId, onSelectTask }) {
   return (
-    <aside className="min-h-0 rounded-[26px] bg-white p-4 shadow-[0_1px_0_rgba(0,0,0,0.04)] lg:h-full lg:overflow-y-auto">
+    <aside className="order-2 max-h-[280px] min-h-0 overflow-y-auto rounded-[26px] bg-white p-4 shadow-[0_1px_0_rgba(0,0,0,0.04)] lg:order-none lg:h-full lg:max-h-none lg:overflow-y-auto">
       <div className="mb-4 flex items-center gap-2">
         <span className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-[#FFF1F2] text-[#EA002C]">
           <ListTodo aria-hidden="true" className="h-5 w-5" />
@@ -1375,7 +1396,7 @@ function AssistPanel({
   onSubmit,
 }) {
   return (
-    <section id="ai-assist" className="flex min-h-0 flex-1 flex-col rounded-[22px] bg-[#f7f7f7] p-3">
+    <section id="ai-assist" className="flex min-h-[260px] flex-1 flex-col rounded-[22px] bg-[#f7f7f7] p-3 lg:min-h-0">
       <div className="mb-2 flex items-center gap-2">
         <Sparkles aria-hidden="true" className="h-4 w-4 text-sk-orange" />
         <h2 className="text-sm font-black text-black">Achiever AI 채팅</h2>
@@ -1467,6 +1488,9 @@ function TaskScreen({
   const isTaskDone = task?.status === "done";
   const parentGoal = path[path.length - 1] || tree.title;
   const achieveTips = normalizeAchieveTips(task?.achieveTips, task?.title, parentGoal);
+  const [isDesktopTaskLayout, setIsDesktopTaskLayout] = useState(() =>
+    typeof window === "undefined" ? true : window.innerWidth >= 1024,
+  );
   const [taskBoardHeight, setTaskBoardHeight] = useState(() =>
     typeof window === "undefined" ? 560 : Math.max(420, window.innerHeight - 224),
   );
@@ -1474,16 +1498,18 @@ function TaskScreen({
   useEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: "auto" });
     const previousOverflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-    const updateTaskBoardHeight = () => {
+    const updateTaskBoardLayout = () => {
+      const isDesktop = window.innerWidth >= 1024;
+      setIsDesktopTaskLayout(isDesktop);
       setTaskBoardHeight(Math.max(420, window.innerHeight - 224));
+      document.body.style.overflow = isDesktop ? "hidden" : previousOverflow;
     };
 
-    updateTaskBoardHeight();
-    window.addEventListener("resize", updateTaskBoardHeight);
+    updateTaskBoardLayout();
+    window.addEventListener("resize", updateTaskBoardLayout);
 
     return () => {
-      window.removeEventListener("resize", updateTaskBoardHeight);
+      window.removeEventListener("resize", updateTaskBoardLayout);
       document.body.style.overflow = previousOverflow;
     };
   }, [task?.id]);
@@ -1497,12 +1523,12 @@ function TaskScreen({
             <p className="text-sm font-black text-[#EA002C]">
               전체 {progress.total}개 중 {progress.done}개 완료
             </p>
-            <h1 className="mt-1 break-keep text-2xl font-black text-black sm:text-3xl">
+            <h1 className="mt-1 break-keep text-xl font-black text-black sm:text-3xl">
               {tree.title}
             </h1>
           </div>
           <ActionButton
-            className="border border-zinc-200 bg-white text-zinc-700 hover:border-sk-orange hover:text-black"
+            className="w-full border border-zinc-200 bg-white text-zinc-700 hover:border-sk-orange hover:text-black sm:w-auto"
             icon={RotateCcw}
             onClick={onReset}
             type="button"
@@ -1513,8 +1539,8 @@ function TaskScreen({
 
         <section
           id="task-board"
-          className="grid gap-4 rounded-[32px] bg-[#f3f3f3] p-4 sm:p-5 lg:min-h-0 lg:grid-cols-[260px_minmax(0,1fr)_340px] lg:overflow-hidden lg:p-5"
-          style={{ height: taskBoardHeight }}
+          className="grid gap-4 rounded-[28px] bg-[#f3f3f3] p-3 sm:p-5 lg:min-h-0 lg:grid-cols-[260px_minmax(0,1fr)_340px] lg:overflow-hidden lg:rounded-[32px] lg:p-5"
+          style={isDesktopTaskLayout ? { height: taskBoardHeight } : undefined}
         >
           <TaskListNav
             activeTaskId={task?.id || ""}
@@ -1522,7 +1548,7 @@ function TaskScreen({
             taskEntries={taskEntries}
           />
 
-          <div className="flex min-h-0 flex-col justify-center overflow-hidden rounded-[26px] bg-white p-5 shadow-[0_1px_0_rgba(0,0,0,0.04)] sm:p-6">
+          <div className="order-1 flex min-h-[420px] flex-col justify-center rounded-[26px] bg-white p-4 shadow-[0_1px_0_rgba(0,0,0,0.04)] sm:min-h-[460px] sm:p-6 lg:order-none lg:min-h-0 lg:overflow-hidden">
             <div className="mx-auto w-full max-w-3xl space-y-4">
               <div className="rounded-[32px] border border-zinc-100 bg-white p-4 shadow-[0_18px_55px_rgba(0,0,0,0.07)] sm:p-6">
                 <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
@@ -1532,7 +1558,7 @@ function TaskScreen({
                   </div>
                 </div>
 
-                <h2 className="break-keep text-3xl font-black leading-[1.24] tracking-normal text-black sm:text-[2rem]">
+                <h2 className="break-keep text-2xl font-black leading-[1.32] tracking-normal text-black sm:text-[2rem]">
                   {task?.title}
                 </h2>
                 <div className="mt-4 rounded-[20px] bg-[#fafafa] px-4 py-3">
@@ -1556,7 +1582,7 @@ function TaskScreen({
 
               <div className="grid gap-3 sm:grid-cols-[1.4fr_1fr]">
                 <button
-                  className="group flex h-[72px] items-center justify-center gap-3 rounded-[24px] border border-[#EA002C] bg-white px-6 py-3 text-left text-zinc-900 transition hover:-translate-y-0.5 hover:bg-[#fffafa] disabled:cursor-not-allowed disabled:opacity-55"
+                  className="group flex min-h-[72px] items-center justify-center gap-3 rounded-[24px] border border-[#EA002C] bg-white px-5 py-3 text-left text-zinc-900 transition hover:-translate-y-0.5 hover:bg-[#fffafa] disabled:cursor-not-allowed disabled:opacity-55 sm:h-[72px] sm:px-6"
                   disabled={!task || isTaskDone || isSubdividing}
                   onClick={onComplete}
                   type="button"
@@ -1570,7 +1596,7 @@ function TaskScreen({
                   </span>
                 </button>
                 <button
-                  className="flex h-[72px] items-center justify-center gap-3 rounded-[24px] border border-zinc-200 bg-white px-6 py-3 text-left text-zinc-800 transition hover:-translate-y-0.5 hover:border-sk-orange hover:bg-[#fff7f2] disabled:cursor-not-allowed disabled:opacity-55"
+                  className="flex min-h-[72px] items-center justify-center gap-3 rounded-[24px] border border-zinc-200 bg-white px-5 py-3 text-left text-zinc-800 transition hover:-translate-y-0.5 hover:border-sk-orange hover:bg-[#fff7f2] disabled:cursor-not-allowed disabled:opacity-55 sm:h-[72px] sm:px-6"
                   disabled={!task || isSubdividing}
                   onClick={onSubdivide}
                   type="button"
@@ -1591,7 +1617,7 @@ function TaskScreen({
             </div>
           </div>
 
-          <aside className="flex min-h-0 flex-col gap-3 rounded-[26px] bg-white p-4 shadow-[0_1px_0_rgba(0,0,0,0.04)] lg:h-full lg:overflow-hidden">
+          <aside className="order-3 flex min-h-0 flex-col gap-3 rounded-[26px] bg-white p-4 shadow-[0_1px_0_rgba(0,0,0,0.04)] lg:order-none lg:h-full lg:overflow-hidden">
             <div className="grid grid-cols-2 gap-3">
               <InfoRow label="진행 상태" value={"전체 " + progress.total + "개 중 " + progress.done + "개 완료"} />
               <InfoRow label="진행률" value={progress.percent + "%"} />
@@ -1623,7 +1649,7 @@ function TaskScreen({
 function FloatingToggle({ icon: Icon, label, onClick }) {
   return (
     <button
-      className="fixed bottom-6 right-6 z-40 inline-flex min-h-12 items-center justify-center gap-2 whitespace-nowrap rounded-full bg-black px-5 py-3 text-sm font-black text-white shadow-[0_18px_45px_rgba(0,0,0,0.22)] transition hover:-translate-y-0.5 hover:bg-zinc-800"
+      className="fixed bottom-4 right-4 z-40 inline-flex min-h-12 items-center justify-center gap-2 whitespace-nowrap rounded-full bg-black px-4 py-3 text-sm font-black text-white shadow-[0_18px_45px_rgba(0,0,0,0.22)] transition hover:-translate-y-0.5 hover:bg-zinc-800 sm:bottom-6 sm:right-6 sm:px-5"
       onClick={onClick}
       type="button"
     >

@@ -59,6 +59,12 @@ button:disabled {
   min-width: 720px;
 }
 
+@media (max-width: 639px) {
+  .tree-map-canvas {
+    min-width: 620px;
+  }
+}
+
 .tree-node-fade {
   animation: tree-node-fade 420ms ease-out both;
 }
