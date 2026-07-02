@@ -1325,19 +1325,10 @@ function MapScreen({ tree, activeTaskId, mapPhase, progress, onMapPhaseChange, o
             </div>
             <TreeMap tree={tree} phase={mapPhase} activeTaskId={activeTaskId} />
 
-            <div className="pointer-events-none absolute bottom-5 left-5 right-5 z-20 flex flex-col items-stretch justify-between gap-3 sm:flex-row sm:items-end">
-              <ActionButton
-                className="pointer-events-auto w-full border border-zinc-200 bg-white/95 text-zinc-700 shadow-[0_12px_28px_rgba(0,0,0,0.08)] backdrop-blur hover:border-sk-orange hover:text-black sm:w-auto"
-                icon={RotateCcw}
-                onClick={onReset}
-                type="button"
-              >
-                새로운 목표 시작하기
-              </ActionButton>
-
+            <div className="pointer-events-none absolute bottom-5 left-5 right-5 z-20 flex justify-center">
               {mapPhase >= 3 ? (
                 <ActionButton
-                  className="pointer-events-auto w-full bg-sk-red text-white shadow-[0_16px_34px_rgba(234,0,44,0.25)] hover:bg-[#d90029] sm:w-auto"
+                  className="pointer-events-auto min-h-14 w-full max-w-[260px] bg-sk-red px-8 text-lg text-white shadow-[0_18px_38px_rgba(234,0,44,0.28)] hover:bg-[#d90029] sm:min-h-16 sm:max-w-[300px]"
                   onClick={onViewTask}
                   type="button"
                 >
