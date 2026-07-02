@@ -1325,10 +1325,10 @@ function MapScreen({ tree, activeTaskId, mapPhase, progress, onMapPhaseChange, o
             </div>
             <TreeMap tree={tree} phase={mapPhase} activeTaskId={activeTaskId} />
 
-            <div className="pointer-events-none absolute bottom-5 left-5 right-5 z-20 flex justify-center">
+            <div className="pointer-events-none absolute bottom-8 left-5 right-5 z-20 flex justify-center">
               {mapPhase >= 3 ? (
                 <ActionButton
-                  className="pointer-events-auto min-h-14 w-full max-w-[260px] bg-sk-red px-8 text-lg text-white shadow-[0_18px_38px_rgba(234,0,44,0.28)] hover:bg-[#d90029] sm:min-h-16 sm:max-w-[300px]"
+                  className="pointer-events-auto min-h-[52px] w-full max-w-[220px] bg-sk-red px-7 text-base text-white shadow-[0_14px_30px_rgba(234,0,44,0.24)] hover:bg-[#d90029] sm:max-w-[240px]"
                   onClick={onViewTask}
                   type="button"
                 >
