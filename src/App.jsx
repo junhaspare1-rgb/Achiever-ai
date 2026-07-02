@@ -26,7 +26,10 @@ const STORAGE_KEYS = {
   mapPhase: "achiever_map_phase",
   projects: "achiever_projects",
   activeProject: "achiever_active_project",
+  aboutHiddenUntil: "achiever_about_hidden_until",
 };
+
+const ABOUT_SESSION_KEY = "achiever_about_opened_session";
 
 const LEGACY_STORAGE_KEYS = [
   "achiever_api_key",
@@ -39,7 +42,7 @@ const LEGACY_STORAGE_KEYS = [
 
 const EXAMPLE_GOALS = [
   "5kg 감량하기",
-  "Python 기초부터 포트폴리오까지",
+  "스페인어 기초 마스터",
   "매일 아침 6시 기상 습관 만들기",
 ];
 
@@ -573,48 +576,154 @@ function ErrorBanner({ message, onRetry }) {
 }
 
 function AppHeader({ onLogoClick, onProjectsClick }) {
-  return (
-    <header className="border-b border-zinc-200/70 bg-white px-5 py-7 sm:px-8 lg:px-10">
-      <div className="mx-auto flex w-full max-w-[1600px] items-center justify-between">
-        <button className="inline-flex items-baseline gap-1 font-black" onClick={onLogoClick} type="button">
-          <span className="text-xl text-sk-orange sm:text-2xl">Achiever</span>
-          <span className="text-xl text-sk-red sm:text-2xl">AI</span>
-        </button>
+  const [isAboutOpen, setIsAboutOpen] = useState(false);
 
-        <div className="hidden items-center gap-12 text-base font-black text-black lg:flex">
-          <button className="transition hover:text-[#EA002C]" onClick={onLogoClick} type="button">
+  useEffect(() => {
+    const hiddenUntil = Number(localStorage.getItem(STORAGE_KEYS.aboutHiddenUntil) || "0");
+    const hasOpenedThisSession = sessionStorage.getItem(ABOUT_SESSION_KEY) === "true";
+
+    if (!hasOpenedThisSession && (!Number.isFinite(hiddenUntil) || hiddenUntil <= Date.now())) {
+      sessionStorage.setItem(ABOUT_SESSION_KEY, "true");
+      setIsAboutOpen(true);
+    }
+  }, []);
+
+  function closeAbout() {
+    sessionStorage.setItem(ABOUT_SESSION_KEY, "true");
+    setIsAboutOpen(false);
+  }
+
+  function hideAboutForToday() {
+    sessionStorage.setItem(ABOUT_SESSION_KEY, "true");
+    localStorage.setItem(STORAGE_KEYS.aboutHiddenUntil, String(Date.now() + 24 * 60 * 60 * 1000));
+    setIsAboutOpen(false);
+  }
+
+  return (
+    <>
+      <header className="border-b border-zinc-200/70 bg-white px-5 py-7 sm:px-8 lg:px-10">
+        <div className="mx-auto flex w-full max-w-[1600px] items-center justify-between">
+          <div className="flex items-center gap-8">
+            <button className="inline-flex items-baseline gap-1 font-black" onClick={onLogoClick} type="button">
+              <span className="text-2xl text-sk-orange sm:text-[1.7rem]">Achiever</span>
+              <span className="text-2xl text-sk-red sm:text-[1.7rem]">AI</span>
+            </button>
+
+            <div className="hidden items-center gap-8 text-base font-black text-zinc-500 lg:flex">
+              <button className="transition hover:text-[#EA002C]" onClick={onLogoClick} type="button">
+                목표 생성
+              </button>
+              <button className="transition hover:text-[#EA002C]" onClick={onProjectsClick} type="button">
+                프로젝트 목록
+              </button>
+            </div>
+          </div>
+
+          <button
+            className="rounded-full bg-black px-4 py-2 text-sm font-black text-white transition hover:bg-zinc-800 sm:px-5"
+            onClick={() => setIsAboutOpen(true)}
+            type="button"
+          >
+            About
+          </button>
+        </div>
+        <nav className="mx-auto mt-5 grid w-full max-w-[1600px] grid-cols-2 gap-2 lg:hidden">
+          <button
+            className="h-11 rounded-full border border-zinc-200 bg-white text-sm font-black text-zinc-900 transition hover:border-[#EA002C] hover:text-[#EA002C]"
+            onClick={onLogoClick}
+            type="button"
+          >
             프로젝트 생성
           </button>
-          <button className="transition hover:text-[#EA002C]" onClick={onProjectsClick} type="button">
+          <button
+            className="h-11 rounded-full border border-zinc-200 bg-white text-sm font-black text-zinc-900 transition hover:border-[#EA002C] hover:text-[#EA002C]"
+            onClick={onProjectsClick}
+            type="button"
+          >
             프로젝트 목록
+          </button>
+        </nav>
+      </header>
+
+      {isAboutOpen ? <AboutDialog onClose={closeAbout} onHideToday={hideAboutForToday} /> : null}
+    </>
+  );
+}
+
+function AboutDialog({ onClose, onHideToday }) {
+  return (
+    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-zinc-950/38 px-4 py-6 backdrop-blur-[2px]">
+      <section
+        aria-label="개발자 메시지"
+        className="relative flex max-h-[88vh] w-full max-w-3xl flex-col overflow-hidden rounded-[28px] bg-white shadow-[0_28px_80px_rgba(15,23,42,0.28)]"
+        role="dialog"
+      >
+        <div className="flex items-start justify-between gap-4 px-6 pb-3 pt-6 sm:px-8 sm:pt-8">
+          <div>
+            <span className="inline-flex rounded-full bg-[#EEF3FB] px-4 py-2 text-sm font-black text-zinc-600">
+              개발자 메시지
+            </span>
+            <h2 className="mt-5 break-keep text-3xl font-black leading-tight text-zinc-950 sm:text-4xl">
+              Achiever AI를 찾아주신 분들께
+            </h2>
+          </div>
+          <button
+            aria-label="개발자 메시지 닫기"
+            className="inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-zinc-200 bg-white text-3xl font-light leading-none text-zinc-500 transition hover:border-[#EA002C]/40 hover:text-[#EA002C]"
+            onClick={onClose}
+            type="button"
+          >
+            ×
           </button>
         </div>
 
-        <button
-          className="rounded-full bg-black px-4 py-2 text-sm font-black text-white transition hover:bg-zinc-800 sm:px-5"
-          onClick={() => window.alert("현재 Achiever AI는 베타 버전이어서 로그인 기능을 지원하지 않습니다.")}
-          type="button"
-        >
-          Log In
-        </button>
-      </div>
-      <nav className="mx-auto mt-5 grid w-full max-w-[1600px] grid-cols-2 gap-2 lg:hidden">
-        <button
-          className="h-11 rounded-full border border-zinc-200 bg-white text-sm font-black text-zinc-900 transition hover:border-[#EA002C] hover:text-[#EA002C]"
-          onClick={onLogoClick}
-          type="button"
-        >
-          프로젝트 생성
-        </button>
-        <button
-          className="h-11 rounded-full border border-zinc-200 bg-white text-sm font-black text-zinc-900 transition hover:border-[#EA002C] hover:text-[#EA002C]"
-          onClick={onProjectsClick}
-          type="button"
-        >
-          프로젝트 목록
-        </button>
-      </nav>
-    </header>
+        <div className="min-h-0 flex-1 overflow-y-auto px-6 py-3 sm:px-8">
+          <div className="space-y-5 break-keep text-lg font-medium leading-8 text-zinc-900">
+            <p>
+              안녕하세요, SK 구성원 여러분! 만나서 반갑습니다 :)
+            </p>
+            <p>
+              Achiever AI를 개발한 6분과 4조 김준하라고 합니다.
+            </p>
+            <p>
+              혹시 목표는 있는데, 시작이 막막했던 적 있으신가요?
+            </p>
+            <p>
+              저도 그랬습니다. 해야 할 일은 머릿속에 있는데, 어디서부터 손을 대야 할지 몰라서 결국 아무것도 못 한 날들이 있었어요. Achiever AI는 바로 그 순간을 위해 만든 AI Agent입니다.
+            </p>
+            <p>
+              목표와 기한, 예상되는 어려움을 입력하면 AI가 목표 전체를 Tree Map으로 시각화하고, 지금 당장 실행 가능한 가장 작은 Task들만 제시합니다. 사용자는 복잡한 계획 전체를 감당할 필요 없이, 눈앞의 Task 하나에만 집중하면 됩니다.
+            </p>
+            <p>
+              단순한 To-do List를 만드는 것이 아니라, 막연한 의지가 구체적인 첫 행동으로 전환되는 경험을 설계하는 데 집중했습니다. 여러분도 Achiever AI를 통해 '어느새 목표에 다가가고 있는 나'를 발견하시기 바랍니다.
+            </p>
+            <div className="rounded-[18px] border-l-4 border-[#EA002C] bg-[#FFF1F2] px-5 py-4 font-black text-zinc-950">
+              큰 목표를 작게 쪼개면, 실행은 시작됩니다.
+            </div>
+            <p>
+              부족한 부분이 많지만, 직접 써보시고 만족하셨다면 투표 부탁드립니다 :)
+            </p>
+          </div>
+        </div>
+
+        <div className="grid gap-3 border-t border-zinc-100 bg-white px-6 py-5 sm:grid-cols-2 sm:px-8">
+          <button
+            className="h-14 rounded-[18px] border border-zinc-200 bg-white text-base font-black text-zinc-800 transition hover:border-[#EA002C]/40 hover:text-[#EA002C]"
+            onClick={onHideToday}
+            type="button"
+          >
+            하루 동안 보지 않기
+          </button>
+          <button
+            className="h-14 rounded-[18px] bg-zinc-950 text-base font-black text-white transition hover:bg-zinc-800"
+            onClick={onClose}
+            type="button"
+          >
+            닫기
+          </button>
+        </div>
+      </section>
+    </div>
   );
 }
 
@@ -935,13 +1044,17 @@ function SimpleGoalInputScreen({
   return (
     <Shell onLogoClick={onLogoClick} onProjectsClick={onProjectsClick}>
       <section id="goal-entry" className="relative flex flex-1 items-center justify-center overflow-hidden py-10 sm:py-14">
-        <div className="pointer-events-none absolute left-1/2 top-1/2 h-[560px] w-[860px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(circle,rgba(234,0,44,0.16)_0%,rgba(244,119,37,0.08)_34%,rgba(245,247,250,0)_70%)] blur-3xl" />
+        <div className="pointer-events-none absolute inset-0 overflow-hidden">
+          <div className="absolute left-1/2 top-[48%] h-[520px] w-[820px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(circle,rgba(234,0,44,0.13)_0%,rgba(244,119,37,0.08)_38%,rgba(245,247,250,0)_72%)] blur-2xl" />
+          <div className="absolute right-[14%] top-[28%] h-[280px] w-[380px] rounded-full bg-[radial-gradient(circle,rgba(244,119,37,0.10)_0%,rgba(244,119,37,0)_70%)] blur-3xl" />
+          <div className="absolute left-[12%] bottom-[16%] h-[280px] w-[380px] rounded-full bg-[radial-gradient(circle,rgba(234,0,44,0.08)_0%,rgba(234,0,44,0)_72%)] blur-3xl" />
+        </div>
         <div className="relative z-10 mx-auto w-full max-w-5xl">
           <div className="mb-10 text-center">
             <h1 className="break-keep text-3xl font-black leading-tight text-black sm:text-5xl lg:text-6xl">
               목표는 있는데, 시작이 막막한가요?
             </h1>
-            <p className="mx-auto mt-5 max-w-2xl break-keep text-base font-bold leading-7 text-zinc-500 sm:text-lg sm:leading-8">
+            <p className="mx-auto mt-5 max-w-2xl break-keep text-base font-bold leading-7 text-zinc-600 sm:text-lg sm:leading-8">
               막막한 목표를 지금 당장 실행할 수 있는 가장 작은 행동으로 바꿔드립니다.
             </p>
           </div>
@@ -982,8 +1095,7 @@ function SimpleGoalInputScreen({
                     value={value}
                   />
                   <button
-                    className="inline-flex h-12 w-full items-center justify-center gap-2 rounded-[20px] bg-[#EA002C] px-6 text-sm font-black text-white transition hover:bg-[#D90029] disabled:cursor-not-allowed disabled:opacity-50 sm:h-14 sm:w-auto"
-                    disabled={isLoading}
+className="inline-flex h-12 w-full items-center justify-center gap-2 rounded-[20px] bg-[#EA002C] px-6 text-base font-black text-white transition hover:bg-[#D90029] disabled:cursor-not-allowed disabled:opacity-50 sm:h-14 sm:w-auto"                    disabled={isLoading}
                     type="submit"
                   >
                     {isLoading ? (
@@ -1254,7 +1366,7 @@ function TreeMap({ tree, phase, activeTaskId }) {
                         ✓
                       </text>
                     ) : null}
-                    <text fill="#18181B" fontSize="13" fontWeight="900" textAnchor="middle" x="0" y={titleStartY}>
+                    <text fill="#18181B" fontSize="14" fontWeight="900" textAnchor="middle" x="0" y={titleStartY}>
                       {titleLines.map((line, index) => (
                         <tspan key={data.id + "-line-" + index} x="0" dy={index === 0 ? 0 : 18}>
                           {line}
@@ -1625,60 +1737,58 @@ function TaskScreen({
             taskEntries={taskEntries}
           />
 
-          <div className="order-1 flex min-h-[420px] flex-col justify-center rounded-[26px] bg-white p-4 shadow-[0_1px_0_rgba(0,0,0,0.04)] sm:min-h-[460px] sm:p-6 xl:order-none xl:min-h-0 xl:overflow-hidden">
-            <div className="mx-auto w-full max-w-3xl space-y-4">
-              <div className="rounded-[32px] border border-zinc-100 bg-white p-4 shadow-[0_18px_55px_rgba(0,0,0,0.07)] sm:p-6">
-                <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
-                  <div className="inline-flex max-w-full items-center gap-2 rounded-full bg-[#FFF1F2] px-4 py-2 text-sm font-black text-[#EA002C]">
-                    <Target aria-hidden="true" className="h-4 w-4" />
-                    <span className="truncate">{parentGoal}</span>
-                  </div>
+          <div className="order-1 flex min-h-[420px] flex-col justify-center rounded-[26px] bg-white p-5 shadow-[0_1px_0_rgba(0,0,0,0.04)] sm:min-h-[460px] sm:p-8 xl:order-none xl:min-h-0 xl:overflow-hidden xl:p-10">
+            <div className="mx-auto w-full max-w-5xl space-y-5">
+              <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
+                <div className="inline-flex max-w-full items-center gap-2 rounded-full bg-[#FFF1F2] px-4 py-2 text-sm font-black text-[#EA002C]">
+                  <Target aria-hidden="true" className="h-4 w-4" />
+                  <span className="truncate">{parentGoal}</span>
                 </div>
+              </div>
 
-                <h2 className="break-keep text-2xl font-black leading-[1.32] tracking-normal text-black sm:text-[2rem]">
-                  {task?.title}
-                </h2>
-                <div className="mt-4 rounded-[20px] bg-[#fafafa] px-4 py-3">
-                  <p className="mb-2 text-sm font-black uppercase tracking-normal text-[#EA002C]">
-                    Achieve Tip
-                  </p>
-                  <ol className="space-y-1.5">
-                    {achieveTips.map((tip, index) => (
-                      <li key={`${task?.id || "task"}-tip-${index}`} className="flex gap-2.5 break-keep text-sm font-bold leading-6 text-zinc-600">
-                        <span className="mt-0.5 inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-white text-[11px] font-black text-[#EA002C] ring-1 ring-[#EA002C]/15">
-                          {index + 1}
-                        </span>
-                        <span>{tip}</span>
-                      </li>
-                    ))}
-                  </ol>
-                </div>
+              <h2 className="break-keep text-2xl font-black leading-[1.32] tracking-normal text-black sm:text-[2rem]">
+                {task?.title}
+              </h2>
+              <div className="mt-4 rounded-[20px] bg-[#fafafa] px-4 py-3">
+                <p className="mb-2 text-sm font-black uppercase tracking-normal text-[#EA002C]">
+                  Achieve Tip
+                </p>
+                <ol className="space-y-1.5">
+                  {achieveTips.map((tip, index) => (
+                    <li key={`${task?.id || "task"}-tip-${index}`} className="flex gap-2.5 break-keep text-sm font-bold leading-6 text-zinc-600">
+                      <span className="mt-0.5 inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-white text-[11px] font-black text-[#EA002C] ring-1 ring-[#EA002C]/15">
+                        {index + 1}
+                      </span>
+                      <span>{tip}</span>
+                    </li>
+                  ))}
+                </ol>
               </div>
 
               <ErrorBanner message={error} onRetry={onRetrySubdivide} />
 
-              <div className="grid gap-3 sm:grid-cols-[1.4fr_1fr]">
+              <div className="grid gap-3 sm:grid-cols-2">
                 <button
-                  className="group flex min-h-[72px] items-center justify-center gap-3 rounded-[24px] border border-[#EA002C] bg-white px-5 py-3 text-left text-zinc-900 transition hover:-translate-y-0.5 hover:bg-[#fffafa] disabled:cursor-not-allowed disabled:opacity-55 sm:h-[72px] sm:px-6"
+                  className="group flex min-h-[72px] items-center justify-center gap-3 rounded-[24px] border border-[#EA002C] bg-[#EA002C] px-5 py-3 text-left text-white shadow-[0_14px_30px_rgba(234,0,44,0.22)] transition hover:-translate-y-0.5 hover:bg-[#d90029] disabled:cursor-not-allowed disabled:opacity-55 sm:h-[72px] sm:px-6"
                   disabled={!task || isTaskDone || isSubdividing}
                   onClick={onComplete}
                   type="button"
                 >
-                  <span className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-zinc-100 text-zinc-800">
+                  <span className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white/18 text-white ring-1 ring-white/25">
                     <Check aria-hidden="true" className="h-5 w-5" />
                   </span>
                   <span className="min-w-0">
                     <span className="block text-lg font-black">{isTaskDone ? "완료된 Task" : "완료했어요!"}</span>
-                    <span className="mt-1 block text-sm font-bold text-zinc-500">다음 Task로 이동합니다</span>
+                    <span className="mt-1 block text-sm font-bold text-white/78">다음 Task로 이동합니다</span>
                   </span>
                 </button>
                 <button
-                  className="flex min-h-[72px] items-center justify-center gap-3 rounded-[24px] border border-zinc-200 bg-white px-5 py-3 text-left text-zinc-800 transition hover:-translate-y-0.5 hover:border-sk-orange hover:bg-[#fff7f2] disabled:cursor-not-allowed disabled:opacity-55 sm:h-[72px] sm:px-6"
+                  className="flex min-h-[72px] items-center justify-center gap-3 rounded-[24px] border border-zinc-200 bg-zinc-100 px-5 py-3 text-left text-zinc-800 transition hover:-translate-y-0.5 hover:border-zinc-300 hover:bg-zinc-200 disabled:cursor-not-allowed disabled:opacity-55 sm:h-[72px] sm:px-6"
                   disabled={!task || isSubdividing}
                   onClick={onSubdivide}
                   type="button"
                 >
-                  <span className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-zinc-100 text-zinc-600">
+                  <span className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white text-zinc-600 ring-1 ring-zinc-200">
                     {isSubdividing ? (
                       <Loader2 aria-hidden="true" className="h-5 w-5 animate-spin" />
                     ) : (
