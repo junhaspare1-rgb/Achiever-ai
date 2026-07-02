@@ -618,12 +618,15 @@ function AppHeader({ onLogoClick, onProjectsClick }) {
   );
 }
 
-function Shell({ children, onLogoClick, onProjectsClick }) {
+function Shell({ children, onLogoClick, onProjectsClick, contentClassName = "" }) {
+  const defaultContentClassName =
+    "mx-auto flex min-h-[calc(100vh-6rem)] w-full max-w-[1600px] flex-col px-4 pb-24 pt-6 sm:px-8 sm:pb-10 sm:pt-9 lg:px-10";
+
   return (
     <main className="min-h-screen bg-[#F5F7FA] text-zinc-950">
       <AppHeader onLogoClick={onLogoClick} onProjectsClick={onProjectsClick} />
       <div className="bg-[#F5F7FA]">
-        <div className="mx-auto flex min-h-[calc(100vh-6rem)] w-full max-w-[1600px] flex-col px-4 pb-24 pt-6 sm:px-8 sm:pb-10 sm:pt-9 lg:px-10">
+        <div className={contentClassName || defaultContentClassName}>
           {children}
         </div>
       </div>
@@ -1119,7 +1122,7 @@ function TreeMap({ tree, phase, activeTaskId }) {
   });
 
   return (
-    <div className="relative flex min-h-[620px] flex-1 overflow-hidden rounded-[26px] bg-white shadow-[0_18px_52px_rgba(15,23,42,0.05)] sm:min-h-[700px] sm:rounded-[30px] lg:min-h-[calc(100vh-128px)]">
+    <div className="relative flex h-full min-h-0 flex-1 overflow-hidden rounded-[24px] bg-white shadow-[0_18px_52px_rgba(15,23,42,0.05)] sm:rounded-[28px]">
       <div className="absolute right-4 top-4 z-20 flex items-center gap-2 rounded-full border border-zinc-200 bg-white/90 p-1 shadow-[0_12px_30px_rgba(0,0,0,0.08)] backdrop-blur sm:right-6 sm:top-6">
         <button
           aria-label="MAP 축소"
@@ -1147,7 +1150,7 @@ function TreeMap({ tree, phase, activeTaskId }) {
         </button>
       </div>
 
-      <div ref={setScrollContainer} className="tree-map-scroll flex-1 overflow-auto p-4 pt-20 sm:p-6 sm:pt-24">
+      <div ref={setScrollContainer} className="tree-map-scroll flex-1 overflow-auto p-4 pt-[104px] sm:p-6 sm:pt-[112px]">
         <svg
           aria-label="목표 트리 MAP"
           className="tree-map-canvas"
@@ -1287,26 +1290,30 @@ function MapScreen({ tree, activeTaskId, mapPhase, progress, onMapPhaseChange, o
   return (
     <>
       <ProgressBar done={progress.done} total={progress.total} />
-      <Shell onLogoClick={onLogoClick} onProjectsClick={onProjectsClick}>
-        <section className="flex flex-1">
-          <div className="relative flex min-h-[calc(100vh-150px)] flex-1 overflow-hidden rounded-[30px] bg-[#EEF1F5] p-2 sm:min-h-[calc(100vh-166px)] sm:rounded-[36px] sm:p-3 lg:min-h-[calc(100vh-142px)]">
-            <div className="pointer-events-none absolute left-1/2 top-4 z-30 w-[min(calc(100%-2rem),720px)] -translate-x-1/2 sm:top-6">
-              <div className="rounded-[22px] border border-zinc-200/70 bg-white/92 p-4 shadow-[0_18px_48px_rgba(15,23,42,0.10)] backdrop-blur-md sm:rounded-[26px] sm:p-5">
-                <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+      <Shell
+        contentClassName="mx-auto flex h-[calc(100vh-151px)] min-h-0 w-full max-w-none flex-col overflow-hidden px-3 py-3 sm:px-4 sm:py-4 lg:h-[calc(100vh-89px)] lg:px-5 lg:py-4"
+        onLogoClick={onLogoClick}
+        onProjectsClick={onProjectsClick}
+      >
+        <section className="flex min-h-0 flex-1">
+          <div className="relative flex min-h-0 flex-1 overflow-hidden rounded-[28px] bg-[#EEF1F5] p-2 sm:rounded-[32px] sm:p-3">
+            <div className="pointer-events-none absolute left-1/2 top-3 z-30 w-[min(calc(100%-1.5rem),680px)] -translate-x-1/2 sm:top-4">
+              <div className="rounded-[20px] border border-zinc-200/70 bg-white/92 p-3 shadow-[0_14px_38px_rgba(15,23,42,0.09)] backdrop-blur-md sm:rounded-[22px] sm:p-4">
+                <div className="flex flex-col gap-2.5 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
                   <div className="min-w-0">
-                    <p className="text-xs font-black text-[#EA002C] sm:text-sm">{phaseCopy}</p>
-                    <h1 className="mt-1 line-clamp-2 break-keep text-2xl font-black leading-tight text-black sm:text-3xl">
+                    <p className="text-[11px] font-black text-[#EA002C] sm:text-xs">{phaseCopy}</p>
+                    <h1 className="mt-0.5 line-clamp-1 break-keep text-xl font-black leading-tight text-black sm:text-2xl">
                       {tree.title}
                     </h1>
                   </div>
-                  <div className="min-w-0 shrink-0 sm:w-[220px]">
-                    <div className="mb-2 flex items-center justify-between gap-3 text-xs font-black text-zinc-500">
+                  <div className="min-w-0 shrink-0 sm:w-[210px]">
+                    <div className="mb-1.5 flex items-center justify-between gap-3 text-[11px] font-black text-zinc-500 sm:text-xs">
                       <span>
                         전체 {progress.total}개 중 {progress.done}개 완료
                       </span>
                       <span className="text-[#EA002C]">{progress.percent}%</span>
                     </div>
-                    <div className="h-2.5 overflow-hidden rounded-full bg-zinc-100">
+                    <div className="h-2 overflow-hidden rounded-full bg-zinc-100">
                       <div
                         className="h-full rounded-full bg-[#EA002C] transition-all duration-500"
                         style={{ width: progress.percent + "%" }}
