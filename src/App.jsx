@@ -1025,18 +1025,20 @@ function SimpleGoalInputScreen({
 function TreeMap({ tree, phase, activeTaskId }) {
   const [zoom, setZoom] = useState(() => {
     if (typeof window === "undefined") return 1;
-    if (window.innerWidth < 480) return 0.7;
-    if (window.innerWidth < 768) return 0.82;
-    return 1;
+    if (window.innerWidth < 480) return 0.64;
+    if (window.innerWidth < 768) return 0.74;
+    if (window.innerWidth < 1280) return 0.84;
+    return 0.92;
   });
   const [selectedNodeId, setSelectedNodeId] = useState("");
+  const [scrollContainer, setScrollContainer] = useState(null);
   const layout = useMemo(() => {
     const visibleTree = visibleTreeByPhase(tree, phase);
     const root = d3.hierarchy(visibleTree);
     const treeLayout = d3
       .tree()
-      .nodeSize([220, 145])
-      .separation((a, b) => (a.parent === b.parent ? 0.95 : 1.1));
+      .nodeSize([218, 132])
+      .separation((a, b) => (a.parent === b.parent ? 0.98 : 1.02));
 
     treeLayout(root);
 
@@ -1044,12 +1046,12 @@ function TreeMap({ tree, phase, activeTaskId }) {
     const minX = d3.min(nodes, (node) => node.x) || 0;
     const maxX = d3.max(nodes, (node) => node.x) || 0;
     const maxY = d3.max(nodes, (node) => node.y) || 0;
-    const width = Math.max(900, maxX - minX + 280);
-    const height = Math.max(420, maxY + 190);
+    const width = Math.max(1040, maxX - minX + 340);
+    const height = Math.max(540, maxY + 210);
 
     nodes.forEach((node) => {
-      node.renderX = node.x - minX + 140;
-      node.renderY = node.y + 70;
+      node.renderX = node.x - minX + 170;
+      node.renderY = node.y + 92;
     });
 
     return {
@@ -1063,8 +1065,26 @@ function TreeMap({ tree, phase, activeTaskId }) {
   const viewportWidth = Math.round(layout.width * zoom);
   const viewportHeight = Math.round(layout.height * zoom);
 
+  useEffect(() => {
+    if (!scrollContainer) {
+      return undefined;
+    }
+
+    const frameId = window.requestAnimationFrame(() => {
+      if (scrollContainer.scrollWidth > scrollContainer.clientWidth) {
+        scrollContainer.scrollLeft = Math.max(0, (scrollContainer.scrollWidth - scrollContainer.clientWidth) / 2);
+      }
+
+      if (phase <= 2) {
+        scrollContainer.scrollTop = 0;
+      }
+    });
+
+    return () => window.cancelAnimationFrame(frameId);
+  }, [phase, scrollContainer, viewportWidth, viewportHeight]);
+
   function updateZoom(nextZoom) {
-    setZoom(Math.min(1.5, Math.max(0.6, Number(nextZoom.toFixed(2)))));
+    setZoom(Math.min(1.4, Math.max(0.55, Number(nextZoom.toFixed(2)))));
   }
 
   function getTitleLineMax(data) {
@@ -1099,37 +1119,35 @@ function TreeMap({ tree, phase, activeTaskId }) {
   });
 
   return (
-    <div className="rounded-[24px] bg-white p-3 shadow-[0_1px_0_rgba(0,0,0,0.04)] sm:rounded-[30px] sm:p-4">
-      <div className="mb-4 flex justify-end">
-        <div className="flex items-center gap-2">
-          <button
-            aria-label="MAP 축소"
-            className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-zinc-200 bg-white text-lg font-black text-zinc-800 transition hover:border-[#EA002C] hover:text-[#EA002C]"
-            onClick={() => updateZoom(zoom - 0.1)}
-            type="button"
-          >
-            -
-          </button>
-          <button
-            aria-label={"MAP 확대율 " + Math.round(zoom * 100) + "%, 클릭하면 100%로 초기화"}
-            className="inline-flex h-10 items-center justify-center rounded-full border border-zinc-200 bg-white px-4 text-xs font-black text-zinc-600 transition hover:border-[#EA002C] hover:text-[#EA002C]"
-            onClick={() => updateZoom(1)}
-            type="button"
-          >
-            {Math.round(zoom * 100)}%
-          </button>
-          <button
-            aria-label="MAP 확대"
-            className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-zinc-200 bg-white text-lg font-black text-zinc-800 transition hover:border-[#EA002C] hover:text-[#EA002C]"
-            onClick={() => updateZoom(zoom + 0.1)}
-            type="button"
-          >
-            +
-          </button>
-        </div>
+    <div className="relative flex min-h-[560px] flex-1 overflow-hidden rounded-[28px] border border-zinc-100 bg-white shadow-[0_18px_52px_rgba(15,23,42,0.06)] sm:min-h-[620px] sm:rounded-[34px] lg:min-h-[calc(100vh-260px)]">
+      <div className="absolute right-4 top-4 z-20 flex items-center gap-2 rounded-full border border-zinc-200 bg-white/90 p-1 shadow-[0_12px_30px_rgba(0,0,0,0.08)] backdrop-blur">
+        <button
+          aria-label="MAP 축소"
+          className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-white text-lg font-black text-zinc-800 transition hover:bg-[#FFF1F2] hover:text-[#EA002C]"
+          onClick={() => updateZoom(zoom - 0.1)}
+          type="button"
+        >
+          -
+        </button>
+        <button
+          aria-label={"MAP 확대율 " + Math.round(zoom * 100) + "%, 클릭하면 100%로 초기화"}
+          className="inline-flex h-9 min-w-14 items-center justify-center rounded-full bg-zinc-50 px-3 text-xs font-black text-zinc-700 transition hover:bg-[#FFF1F2] hover:text-[#EA002C]"
+          onClick={() => updateZoom(1)}
+          type="button"
+        >
+          {Math.round(zoom * 100)}%
+        </button>
+        <button
+          aria-label="MAP 확대"
+          className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-white text-lg font-black text-zinc-800 transition hover:bg-[#FFF1F2] hover:text-[#EA002C]"
+          onClick={() => updateZoom(zoom + 0.1)}
+          type="button"
+        >
+          +
+        </button>
       </div>
 
-      <div className="tree-map-scroll overflow-auto rounded-[20px] bg-[#fafafa] p-3 sm:rounded-[24px] sm:p-4">
+      <div ref={setScrollContainer} className="tree-map-scroll flex-1 overflow-auto p-5 pt-16 sm:p-8 sm:pt-20">
         <svg
           aria-label="목표 트리 MAP"
           className="tree-map-canvas"
@@ -1270,8 +1288,8 @@ function MapScreen({ tree, activeTaskId, mapPhase, progress, onMapPhaseChange, o
     <>
       <ProgressBar done={progress.done} total={progress.total} />
       <Shell onLogoClick={onLogoClick} onProjectsClick={onProjectsClick}>
-        <section className="space-y-6">
-          <header className="sticky top-3 z-20 rounded-[24px] bg-white/95 p-4 shadow-[0_10px_30px_rgba(0,0,0,0.06)] backdrop-blur sm:top-5 sm:rounded-[28px] sm:p-5">
+        <section className="flex flex-1 flex-col gap-5">
+          <header className="rounded-[24px] bg-white/95 p-4 shadow-[0_10px_30px_rgba(0,0,0,0.05)] backdrop-blur sm:rounded-[28px] sm:p-5">
             <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
               <div>
                 <p className="text-sm font-black text-[#EA002C]">{phaseCopy}</p>
@@ -1293,12 +1311,12 @@ function MapScreen({ tree, activeTaskId, mapPhase, progress, onMapPhaseChange, o
             </div>
           </header>
 
-          <div className="rounded-[28px] bg-[#f3f3f3] p-3 sm:rounded-[34px] sm:p-6 lg:p-8">
+          <div className="relative flex min-h-[620px] flex-1 rounded-[30px] bg-[#EEF1F5] p-2 sm:min-h-[680px] sm:rounded-[36px] sm:p-4 lg:min-h-[calc(100vh-232px)]">
             <TreeMap tree={tree} phase={mapPhase} activeTaskId={activeTaskId} />
 
-            <div className="mt-6 flex flex-col items-stretch justify-between gap-3 sm:flex-row sm:flex-wrap sm:items-center">
+            <div className="pointer-events-none absolute bottom-5 left-5 right-5 z-20 flex flex-col items-stretch justify-between gap-3 sm:flex-row sm:items-end">
               <ActionButton
-                className="w-full border border-zinc-200 bg-white text-zinc-700 hover:border-sk-orange hover:text-black sm:w-auto"
+                className="pointer-events-auto w-full border border-zinc-200 bg-white/95 text-zinc-700 shadow-[0_12px_28px_rgba(0,0,0,0.08)] backdrop-blur hover:border-sk-orange hover:text-black sm:w-auto"
                 icon={RotateCcw}
                 onClick={onReset}
                 type="button"
@@ -1308,14 +1326,16 @@ function MapScreen({ tree, activeTaskId, mapPhase, progress, onMapPhaseChange, o
 
               {mapPhase >= 3 ? (
                 <ActionButton
-                  className="w-full bg-sk-red text-white shadow-[0_16px_34px_rgba(234,0,44,0.25)] hover:bg-[#d90029] sm:w-auto"
+                  className="pointer-events-auto w-full bg-sk-red text-white shadow-[0_16px_34px_rgba(234,0,44,0.25)] hover:bg-[#d90029] sm:w-auto"
                   onClick={onViewTask}
                   type="button"
                 >
                   시작하기 →
                 </ActionButton>
               ) : (
-                <p className="font-black text-zinc-500">목표 지도를 순서대로 펼치고 있어요...</p>
+                <p className="pointer-events-auto rounded-full bg-white/90 px-5 py-3 text-sm font-black text-zinc-500 shadow-[0_12px_28px_rgba(0,0,0,0.08)] backdrop-blur">
+                  목표 지도를 순서대로 펼치고 있어요...
+                </p>
               )}
             </div>
           </div>

@@ -54,14 +54,23 @@ button:disabled {
   background: rgba(244, 119, 37, 0.2);
 }
 
+.tree-map-scroll {
+  background-color: #fbfcfe;
+  background-image:
+    linear-gradient(rgba(148, 163, 184, 0.16) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(148, 163, 184, 0.16) 1px, transparent 1px);
+  background-size: 24px 24px;
+  scrollbar-color: #a1a1aa transparent;
+}
+
 .tree-map-canvas {
   display: block;
-  min-width: 720px;
+  min-width: 800px;
 }
 
 @media (max-width: 639px) {
   .tree-map-canvas {
-    min-width: 620px;
+    min-width: 680px;
   }
 }
 
