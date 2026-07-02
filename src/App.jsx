@@ -683,9 +683,6 @@ function AboutDialog({ onClose, onHideToday }) {
               안녕하세요, SK 구성원 여러분! 만나서 반갑습니다 :)
             </p>
             <p>
-              Achiever AI를 개발한 6분과 4조 김준하라고 합니다.
-            </p>
-            <p>
               혹시 목표는 있는데, 시작이 막막했던 적 있으신가요?
             </p>
             <p>
