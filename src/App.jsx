@@ -1119,8 +1119,8 @@ function TreeMap({ tree, phase, activeTaskId }) {
   });
 
   return (
-    <div className="relative flex min-h-[560px] flex-1 overflow-hidden rounded-[28px] border border-zinc-100 bg-white shadow-[0_18px_52px_rgba(15,23,42,0.06)] sm:min-h-[620px] sm:rounded-[34px] lg:min-h-[calc(100vh-260px)]">
-      <div className="absolute right-4 top-4 z-20 flex items-center gap-2 rounded-full border border-zinc-200 bg-white/90 p-1 shadow-[0_12px_30px_rgba(0,0,0,0.08)] backdrop-blur">
+    <div className="relative flex min-h-[620px] flex-1 overflow-hidden rounded-[26px] bg-white shadow-[0_18px_52px_rgba(15,23,42,0.05)] sm:min-h-[700px] sm:rounded-[30px] lg:min-h-[calc(100vh-128px)]">
+      <div className="absolute right-4 top-4 z-20 flex items-center gap-2 rounded-full border border-zinc-200 bg-white/90 p-1 shadow-[0_12px_30px_rgba(0,0,0,0.08)] backdrop-blur sm:right-6 sm:top-6">
         <button
           aria-label="MAP 축소"
           className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-white text-lg font-black text-zinc-800 transition hover:bg-[#FFF1F2] hover:text-[#EA002C]"
@@ -1147,7 +1147,7 @@ function TreeMap({ tree, phase, activeTaskId }) {
         </button>
       </div>
 
-      <div ref={setScrollContainer} className="tree-map-scroll flex-1 overflow-auto p-5 pt-16 sm:p-8 sm:pt-20">
+      <div ref={setScrollContainer} className="tree-map-scroll flex-1 overflow-auto p-4 pt-20 sm:p-6 sm:pt-24">
         <svg
           aria-label="목표 트리 MAP"
           className="tree-map-canvas"
@@ -1288,30 +1288,34 @@ function MapScreen({ tree, activeTaskId, mapPhase, progress, onMapPhaseChange, o
     <>
       <ProgressBar done={progress.done} total={progress.total} />
       <Shell onLogoClick={onLogoClick} onProjectsClick={onProjectsClick}>
-        <section className="flex flex-1 flex-col gap-5">
-          <header className="rounded-[24px] bg-white/95 p-4 shadow-[0_10px_30px_rgba(0,0,0,0.05)] backdrop-blur sm:rounded-[28px] sm:p-5">
-            <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-              <div>
-                <p className="text-sm font-black text-[#EA002C]">{phaseCopy}</p>
-                <h1 className="mt-1 break-keep text-2xl font-black text-black sm:text-4xl">
-                  {tree.title}
-                </h1>
-              </div>
-              <div className="min-w-0 sm:min-w-[220px]">
-                <p className="mb-2 text-sm font-black text-zinc-500">
-                  전체 {progress.total}개 중 {progress.done}개 완료
-                </p>
-                <div className="h-3 overflow-hidden rounded-full bg-zinc-100">
-                  <div
-                    className="h-full rounded-full bg-[#EA002C] transition-all duration-500"
-                    style={{ width: progress.percent + "%" }}
-                  />
+        <section className="flex flex-1">
+          <div className="relative flex min-h-[calc(100vh-150px)] flex-1 overflow-hidden rounded-[30px] bg-[#EEF1F5] p-2 sm:min-h-[calc(100vh-166px)] sm:rounded-[36px] sm:p-3 lg:min-h-[calc(100vh-142px)]">
+            <div className="pointer-events-none absolute left-1/2 top-4 z-30 w-[min(calc(100%-2rem),720px)] -translate-x-1/2 sm:top-6">
+              <div className="rounded-[22px] border border-zinc-200/70 bg-white/92 p-4 shadow-[0_18px_48px_rgba(15,23,42,0.10)] backdrop-blur-md sm:rounded-[26px] sm:p-5">
+                <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                  <div className="min-w-0">
+                    <p className="text-xs font-black text-[#EA002C] sm:text-sm">{phaseCopy}</p>
+                    <h1 className="mt-1 line-clamp-2 break-keep text-2xl font-black leading-tight text-black sm:text-3xl">
+                      {tree.title}
+                    </h1>
+                  </div>
+                  <div className="min-w-0 shrink-0 sm:w-[220px]">
+                    <div className="mb-2 flex items-center justify-between gap-3 text-xs font-black text-zinc-500">
+                      <span>
+                        전체 {progress.total}개 중 {progress.done}개 완료
+                      </span>
+                      <span className="text-[#EA002C]">{progress.percent}%</span>
+                    </div>
+                    <div className="h-2.5 overflow-hidden rounded-full bg-zinc-100">
+                      <div
+                        className="h-full rounded-full bg-[#EA002C] transition-all duration-500"
+                        style={{ width: progress.percent + "%" }}
+                      />
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
-          </header>
-
-          <div className="relative flex min-h-[620px] flex-1 rounded-[30px] bg-[#EEF1F5] p-2 sm:min-h-[680px] sm:rounded-[36px] sm:p-4 lg:min-h-[calc(100vh-232px)]">
             <TreeMap tree={tree} phase={mapPhase} activeTaskId={activeTaskId} />
 
             <div className="pointer-events-none absolute bottom-5 left-5 right-5 z-20 flex flex-col items-stretch justify-between gap-3 sm:flex-row sm:items-end">
