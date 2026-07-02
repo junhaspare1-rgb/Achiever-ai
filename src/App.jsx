@@ -971,18 +971,18 @@ function SimpleGoalInputScreen({
 
             <label className="block" htmlFor="goal-input">
               <span className="mb-3 block text-base font-black text-black">{copy.title}</span>
-              <div className="rounded-[30px] border-2 border-[#EA002C]/30 bg-white p-3 transition focus-within:border-[#EA002C]">
-                <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+              <div className="rounded-[28px] border-2 border-[#EA002C]/30 bg-white p-2.5 transition focus-within:border-[#EA002C]">
+                <div className="flex flex-col gap-2.5 sm:flex-row sm:items-center">
                   <input
                     id="goal-input"
-                    className="h-16 min-w-0 flex-1 rounded-[22px] border-0 bg-[#fafafa] px-5 text-base font-black text-zinc-950 outline-none placeholder:text-zinc-400 sm:h-20 sm:px-8 sm:text-xl"
+                    className="h-14 min-w-0 flex-1 rounded-[20px] border-0 bg-[#fafafa] px-5 text-base font-black text-zinc-950 outline-none placeholder:text-zinc-400 sm:h-16 sm:px-7 sm:text-lg"
                     disabled={isLoading}
                     onChange={(event) => onChange(event.target.value)}
                     placeholder={copy.placeholder}
                     value={value}
                   />
                   <button
-                    className="inline-flex h-14 w-full items-center justify-center gap-2 rounded-[22px] bg-[#EA002C] px-7 text-base font-black text-white transition hover:bg-[#D90029] disabled:cursor-not-allowed disabled:opacity-50 sm:h-16 sm:w-auto"
+                    className="inline-flex h-12 w-full items-center justify-center gap-2 rounded-[20px] bg-[#EA002C] px-6 text-sm font-black text-white transition hover:bg-[#D90029] disabled:cursor-not-allowed disabled:opacity-50 sm:h-14 sm:w-auto"
                     disabled={isLoading}
                     type="submit"
                   >
@@ -1049,11 +1049,13 @@ function TreeMap({ tree, phase, activeTaskId }) {
     const minX = d3.min(nodes, (node) => node.x) || 0;
     const maxX = d3.max(nodes, (node) => node.x) || 0;
     const maxY = d3.max(nodes, (node) => node.y) || 0;
+    const contentWidth = maxX - minX;
     const width = Math.max(1040, maxX - minX + 340);
     const height = Math.max(540, maxY + 210);
+    const offsetX = Math.max(170, (width - contentWidth) / 2);
 
     nodes.forEach((node) => {
-      node.renderX = node.x - minX + 170;
+      node.renderX = node.x - minX + offsetX;
       node.renderY = node.y + 92;
     });
 
@@ -1325,10 +1327,10 @@ function MapScreen({ tree, activeTaskId, mapPhase, progress, onMapPhaseChange, o
             </div>
             <TreeMap tree={tree} phase={mapPhase} activeTaskId={activeTaskId} />
 
-            <div className="pointer-events-none absolute bottom-8 left-5 right-5 z-20 flex justify-center">
+            <div className="pointer-events-none absolute bottom-12 left-5 right-5 z-20 flex justify-center">
               {mapPhase >= 3 ? (
                 <ActionButton
-                  className="pointer-events-auto min-h-[52px] w-full max-w-[220px] bg-sk-red px-7 text-base text-white shadow-[0_14px_30px_rgba(234,0,44,0.24)] hover:bg-[#d90029] sm:max-w-[240px]"
+                  className="pointer-events-auto min-h-[48px] w-full max-w-[240px] bg-sk-red px-7 text-base text-white shadow-[0_14px_30px_rgba(234,0,44,0.24)] hover:bg-[#d90029] sm:max-w-[170px]"
                   onClick={onViewTask}
                   type="button"
                 >
@@ -1344,6 +1346,59 @@ function MapScreen({ tree, activeTaskId, mapPhase, progress, onMapPhaseChange, o
         </section>
 
         {mapPhase >= 3 ? <FloatingToggle icon={Zap} label="Task 보기" onClick={onViewTask} /> : null}
+      </Shell>
+    </>
+  );
+}
+
+function MapLoadingScreen({ goal, error, isLoading, onBackToGoal, onLogoClick, onProjectsClick, onRetry }) {
+  return (
+    <>
+      <ProgressBar done={0} total={1} />
+      <Shell
+        contentClassName="mx-auto flex h-[calc(100vh-151px)] min-h-0 w-full max-w-none flex-col overflow-hidden px-3 py-3 sm:px-4 sm:py-4 lg:h-[calc(100vh-89px)] lg:px-5 lg:py-4"
+        onLogoClick={onLogoClick}
+        onProjectsClick={onProjectsClick}
+      >
+        <section className="flex min-h-0 flex-1">
+          <div className="tree-map-scroll relative flex min-h-0 flex-1 items-center justify-center overflow-hidden rounded-[28px] bg-white p-5 sm:rounded-[32px]">
+            <div className="w-full max-w-xl rounded-[26px] border border-zinc-200/70 bg-white/94 p-6 text-center shadow-[0_20px_54px_rgba(15,23,42,0.11)] backdrop-blur-md sm:p-7">
+              <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-[#FFF1F2] text-[#EA002C]">
+                {isLoading ? (
+                  <Loader2 aria-hidden="true" className="h-6 w-6 animate-spin" />
+                ) : (
+                  <AlertCircle aria-hidden="true" className="h-6 w-6" />
+                )}
+              </div>
+              <p className="text-sm font-black text-[#EA002C]">
+                {isLoading ? "목표를 분석하고 있어요" : "분석을 완료하지 못했어요"}
+              </p>
+              <h1 className="mt-2 break-keep text-2xl font-black leading-tight text-black sm:text-3xl">
+                {goal || "목표 지도 생성 중"}
+              </h1>
+              <p className="mx-auto mt-3 max-w-md break-keep text-sm font-bold leading-6 text-zinc-500">
+                {isLoading
+                  ? "입력한 목표를 실행 가능한 목표 지도로 구성하고 있습니다."
+                  : error || "앗, 문제가 생겼어요. 다시 시도해주세요."}
+              </p>
+
+              {!isLoading ? (
+                <div className="mt-6 flex flex-col justify-center gap-2 sm:flex-row">
+                  <ActionButton
+                    className="border border-zinc-200 bg-white text-zinc-700 hover:border-[#EA002C] hover:text-[#EA002C]"
+                    onClick={onBackToGoal}
+                    type="button"
+                  >
+                    입력 수정하기
+                  </ActionButton>
+                  <ActionButton className="bg-sk-red text-white hover:bg-[#d90029]" onClick={onRetry} type="button">
+                    다시 분석하기
+                  </ActionButton>
+                </div>
+              ) : null}
+            </div>
+          </div>
+        </section>
       </Shell>
     </>
   );
@@ -1584,13 +1639,13 @@ function TaskScreen({
                   {task?.title}
                 </h2>
                 <div className="mt-4 rounded-[20px] bg-[#fafafa] px-4 py-3">
-                  <p className="mb-2 text-xs font-black uppercase tracking-normal text-[#EA002C]">
+                  <p className="mb-2 text-sm font-black uppercase tracking-normal text-[#EA002C]">
                     Achieve Tip
                   </p>
                   <ol className="space-y-1.5">
                     {achieveTips.map((tip, index) => (
-                      <li key={`${task?.id || "task"}-tip-${index}`} className="flex gap-2 break-keep text-xs font-bold leading-5 text-zinc-600">
-                        <span className="mt-0.5 inline-flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-white text-[10px] font-black text-[#EA002C] ring-1 ring-[#EA002C]/15">
+                      <li key={`${task?.id || "task"}-tip-${index}`} className="flex gap-2.5 break-keep text-sm font-bold leading-6 text-zinc-600">
+                        <span className="mt-0.5 inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-white text-[11px] font-black text-[#EA002C] ring-1 ring-[#EA002C]/15">
                           {index + 1}
                         </span>
                         <span>{tip}</span>
@@ -1874,6 +1929,12 @@ export default function App() {
 
     setIsLoadingTree(true);
     setError("");
+    setView("map");
+    setActiveProjectId("");
+    setGoalTree(null);
+    setActiveTaskId("");
+    setStartTime(0);
+    setMapPhase(1);
 
     try {
       const tree = await requestGoalTree({
@@ -2217,6 +2278,20 @@ export default function App() {
         onMapPhaseChange={setMapPhase}
         onViewTask={() => setView("task")}
         onReset={handleReset}
+      />
+    );
+  }
+
+  if (view === "map") {
+    return (
+      <MapLoadingScreen
+        error={error}
+        goal={goalInput}
+        isLoading={isLoadingTree}
+        onBackToGoal={() => setView("goal")}
+        onLogoClick={handleGoHome}
+        onProjectsClick={handleOpenProjects}
+        onRetry={createGoalTree}
       />
     );
   }
